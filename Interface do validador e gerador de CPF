@@ -7,7 +7,7 @@ root = tk.Tk()
 def validate_cpf(stringvar: tk.StringVar, button: tk.Button):
     cpf = stringvar.get()
 
-    if cpfutil.is_sequence(cpf):
+    if cpfutil.is_valid(cpf):
         button.config(
             text='OK', activeforeground='green', foreground='green'
         )
