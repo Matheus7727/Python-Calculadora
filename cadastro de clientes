@@ -1,8 +1,42 @@
-from tkinter import *
-from tkinter import ttk
-import sqlite3
+import webbrowser
 
 root = Tk()  # Criação da janela
+
+class Relatorios():
+    def printCliente(self): # Função que serve pra abrir o navegador webbrowser e aparecer o relatorio em pdf
+        webbrowser.open("cliente.pdf")# Cria um pdf na pasta que está sendo direcionado
+    def geraRelstorioCliente(self):
+        self.c = canvas.Canvas("clientes.pdf")
+    # Criando variaveis para alimentar o relatorio
+        self.codigoRel = self.codigo.entry.get()
+        self.nomeRel = self.nome.entry.get()
+        self.foneRel = self.fone.entry.get()
+        self.cidadeRel = self.cidade.entry.get()
+
+        # Relatorio
+        self.c.setFont("Helvetica-Bold", 24)
+        self.c.drawString(200, 790, 'Ficha do Cliente')
+
+        self.c.setFont("Helvetica-Bold", 18)
+        self.c.drawString(50, 700, 'Codigo: ')
+        self.c.drawString(50, 670, 'Nome: ')
+        self.c.drawString(50, 630, 'Telefone: ')
+        self.c.drawString(50, 600, 'Cidade: ')
+
+        self.c.setFont("Helvetica-Bold", 18)
+        self.c.drawString(150, 700, self.codigoRel)
+        self.c.drawString(150, 670, self.nomeRel)
+        self.c.drawString(150, 630, self.foneRel)
+        self.c.drawString(150, 600, self.cidadeRel)
+
+        self.c.rect(20, 720, 550, 5, fill=True, stroke=False)
+
+
+        self.c.showPage()
+        self.c.save()
+        self.printCliente()
+
+
 
 class Func():  # Criando a classe limpar
     def limpa_tela(self):  # Criando Função Limpar
@@ -96,16 +130,17 @@ class Func():  # Criando a classe limpar
         self.limpa_tela()
 
 
-class Application(Func):
+class Application(Func, Relatorios):
     def __init__(self):
         self.root = root
-        self.tela()  # Chamando a função tela
+        self.tela()
         self.frames_da_tela()
         self.criando_botoes()
         self.lista_frame2()
         self.montaTabelas()
         self.select_lista()
-        root.mainloop()  # Criando um loop para abrir a janela
+        self.Menus()
+        root.mainloop()
 
     def tela(self):
         self.root.title("Cadastro de Clientes")  # titulo da tela
@@ -204,5 +239,22 @@ class Application(Func):
         self.listaCli.configure(yscroll=self.scrollLista.set)
         self.scrollLista.place(relx=0.96, rely=0.02, relwidth=0.04, relheight=0.95)
         self.listaCli.bind("<Double-1>", self.OndoubleClick)  # Duplo click na lista
+
+    def Menus(self):
+        menubar = Menu(self.root)
+        self.root.config(menu=menubar)
+        filemenu = Menu(menubar)
+        filemenu2 = Menu(menubar)
+
+        def Quit(): self.root.destroy() # Função que sai do menu
+        menubar.add_cascade(label = "Opções", menu= filemenu)
+        menubar.add_cascade(label= "Relatorios", menu= filemenu2)
+
+        # Adicionando as opções do menu
+        filemenu.add_command(label="Sair", command= Quit) # Chamando o comando Quit para fechar a janela
+        filemenu.add_command(label="Limpa Cliente", command=self.limpa_tela)
+
+        filemenu2.add_command(label= "Ficha do Cliente", command= self.geraRelstorioCliente)
+
 
 app = Application()  # Instanciando a classe
